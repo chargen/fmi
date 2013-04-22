@@ -1,0 +1,435 @@
+\documentclass [10pt]{article} 
+
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{epsfig} 
+\usepackage{fullpage}
+\usepackage{enumerate}
+\usepackage{xspace}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{courier}
+\usepackage{amsmath}
+
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+
+
+\pagestyle{plain}
+\bibliographystyle{plain}
+
+
+\title{Formale Methoden der Informatik \\
+ Computability and Complexity: Exercises }
+\author{Sebastian Geiger\\$<1127054>$}
+\date{SS 2013}
+
+
+  \newtheorem{theorem}{Theorem}
+  \newtheorem{lemma}[theorem]{Lemma}
+  \newtheorem{corollary}[theorem]{Corollary}
+  \newtheorem{proposition}[theorem]{Proposition}
+  \newtheorem{conjecture}[theorem]{Conjecture}
+  \newtheorem{definition}[theorem]{Definition}
+  \newtheorem{example}[theorem]{Example}
+  \newtheorem{remark}[theorem]{Remark}
+  \newtheorem{exercise}[theorem]{Exercise}
+
+  \newcommand{\ra}{\rightarrow}
+  \newcommand{\Ra}{\Rightarrow}
+  \newcommand{\La}{\Leftarrow}
+  \newcommand{\la}{\leftarrow}
+  \newcommand{\LR}{\Leftrightarrow}
+
+  \renewcommand{\phi}{\varphi}
+  \renewcommand{\theta}{\vartheta}
+
+
+\newcommand{\ccfont}[1]{\protect\mathsf{#1}}
+\newcommand{\NP}{\ccfont{NP}}
+
+\newcommand{\NN}{\textbf{N}}
+\newcommand{\IN}{\textbf{Z}}
+\newcommand{\bigO}{\mathrm{O}}
+\newcommand{\bigOmega}{\Omega}
+\newcommand{\bigTheta}{\Theta}
+\newcommand{\REACHABILITY}{\mbox{\bf REACHABILITY}}
+\newcommand{\MAXFLOW}{\mbox{\bf MAX FLOW}}
+\newcommand{\MAXFLOWD}{\mbox{\bf MAX FLOW(D)}}
+\newcommand{\MAXFLOWSUB}{\mbox{\bf MAX FLOW SUBOPTIMAL}}
+\newcommand{\MATCHING}{\mbox{\bf BIPARTITE MATCHING}}
+\newcommand{\TSP}{\mbox{\bf TSP}}
+\newcommand{\TSPD}{\mbox{\bf TSP(D)}}
+
+\newcommand{\TwoSAT}{\mbox{\bf 2-SAT}\xspace}
+\newcommand{\ThreeCol}{\mbox{\bf 3-COLORABILITY}}
+\newcommand{\TwoCol}{\mbox{\bf 2-COLORABILITY}}
+\newcommand{\OneCol}{\mbox{\bf 1-COLORABILITY}}
+\newcommand{\kCol}{\mbox{\bf k-COLORABILITY}}
+\newcommand{\HamPath}{\mbox{\bf HAMILTON-PATH}}
+\newcommand{\HamCycle}{\mbox{\bf HAMILTON-CYCLE}}
+
+\newcommand{\ONESAT}{\mbox{\bf 1-IN-3-SAT}}
+\newcommand{\MONONESAT}{\mbox{\bf MONOTONE 1-IN-3-SAT}}
+\newcommand{\kSAT}{\mbox{\bf k-SAT}}
+\newcommand{\NAESAT}{\mbox{\bf NAESAT}}
+
+
+\renewcommand{\labelenumi}{(\alph{enumi})}
+
+%%% useful macros for Turing machines:
+\newcommand{\blank}{\sqcup}
+\newcommand{\ssym}{\triangleright}
+\newcommand{\esym}{\triangleleft}
+\newcommand{\halt}{\mbox{h}}
+\newcommand{\yess}{\mbox{``yes''}}
+\newcommand{\nos}{\mbox{``no''}}
+\newcommand{\lmove}{\leftarrow}
+\newcommand{\rmove}{\rightarrow}
+\newcommand{\stay}{-}
+\newcommand{\diverge}{\nearrow}
+\newcommand{\yields}[1]{\stackrel{#1}{\rightarrow}}
+
+\newcommand{\HALTING}{\mbox{\bf HALTING}}
+
+\definecolor{lightlightgray}{gray}{0.9}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+
+\begin{document}
+
+\lstset{
+language=C,                             % Code langugage
+basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+commentstyle=\color{gray},              % Comments font
+numbers=left,                           % Line nums position
+stepnumber=1,                           % Step between two line-numbers
+numbersep=5pt,                          % How far are line-numbers from code
+backgroundcolor=\color{lightlightgray}, % Choose background color
+frame=none,                             % A frame around the code
+tabsize=4,                              % Default tab size
+captionpos=b,                           % Caption-position = bottom
+breaklines=true,                        % Automatic line breaking?
+breakatwhitespace=false,                % Automatic breaks only at whitespace?
+showspaces=false,                       % Dont make spaces visible
+showtabs=false,                         % Dont make tabls visible
+morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+
+\maketitle
+\textbf{ The deadline for submitting your exercises for review is
+  April 14. If you would like to receive the corrections before the
+  exercise session on April 15, you should submit your solutions to TUWEL no
+  later than  April 7.  }
+
+
+
+\begin{exercise}
+  By providing a reduction from the \textbf{HALTING} problem to
+  \textbf{REACHABLE-CODE}, prove that \textbf{REACHABLE-CODE} is
+  undecidable.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:}
+Let $(\Pi, I)$ be an arbitrary instance of \textbf{HALTING}. We build an instance $(\Pi', n)$ of \textbf{REACHABLE-CODE} by setting $n=3$ and constructing $\Pi'$ as follows:
+\begin{lstlisting}[mathescape, language=C, numbers=left, basicstyle=\ttfamily, backgroundcolor=\color{lightlightgray},]
+    Boolean $\Pi'$ (String S):
+        $\Pi$(S)
+        return true
+\end{lstlisting}
+
+\textbf{Proof:}\\
+$\Rightarrow$: Assume $(\Pi, I)$ is a positive instance of \textbf{HALTING}. If we set $S=I$ then by construction of $\Pi'$ the program halts and returns true, because $\Pi$ halts on $I$ and the return statement follows immediately after the call to $\Pi$.\\
+$\Leftarrow$: Assume $(\Pi', n)$ is a positive instance of \textbf{REACHABLE-CODE}. That means there is an input S for $\Pi'$ such that $\Pi'$ returns true, but then by the construction of $\Pi'$ it means that $\Pi$ must halt on input $S$, in which case it is a positive instance of \textbf{HALTING}.
+
+\begin{exercise}
+    By providing a semi-decision procedure, prove that \textbf{CORRECTNESS} is
+    semi-decidable.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:}
+We define $\Pi$ as an interpreter that takes an instance of \textbf{CORRECTNESS} $(S, I_1, I_2)$ where S is a program and $I_1$ and $I_2$ are inputs. $\Pi$ does the following:
+\begin{itemize}
+ \item $\Pi$ runs the program S with input $I_1$
+ \item If $S$ terminates and returns $I_2$ then $\Pi$ returns true.
+ \item If $S$ terminates and does not return $I_2$ then $\Pi$ returns false.
+\end{itemize}
+
+\textbf{Proof:}\\
+$\Rightarrow$:\\
+If $(S, I_1, I_2)$ is a positive instance of \textbf{CORRECTNESS}, then S when run on $I_1$ will terminate and return $I_2$. By constuction of $\Pi$, the interpreter will return true.\\
+$\Leftarrow$:\\
+If $(S, I_1, I_2)$ is a negative instance of \textbf{CORRECTNESS}, there are two cases:
+\begin{itemize}
+ \item If S does terminate on input $I_1$, but does not return $I_2$, then by definition of the interpreter, $\Pi$ will return false.
+ \item If S does not terminate on input $I_1$, then the interpreter will run for ever, which is a correct behaviour for a semi-decision procedure.
+\end{itemize}
+
+
+\begin{exercise}
+    By providing a reduction from \textbf{CORRECTNESS} to \textbf{HALTING},
+    prove that \textbf{CORRECTNESS} is semi-decidable.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:}
+Let $(\Pi, I_1, I_2)$ be an arbitrary instance of \textbf{CORRECTNESS}. We construct an instance $(\Pi', S)$ of \textbf{HALTING} by setting $S=I_1$ and constructing $\Pi'$ as follows:
+\begin{lstlisting}[mathescape, language=C, numbers=left, basicstyle=\ttfamily, backgroundcolor=\color{lightlightgray},]
+    Boolean $\Pi'$ (String S) {
+        if ($	\Pi$ (S) = $I_2$) return true;
+        else return false;
+\end{lstlisting}
+
+\textbf{Proof}:\\
+$\Rightarrow$:\\
+Assume $(\Pi, I_1, I_2)$ is a positive instance of \textbf{CORRECTNESS}. Then by the construction of $\Pi'$, $\Pi$ halts on S and returns $I_2$, in which case $\Pi'$ will return true, that means it is a positive instance of \textbf{HALTING}.\\
+$\Leftarrow$:\\
+Assume we have a positive instance ($\Pi', S)$. That means that $\Pi'$ terminates and returns true. In that case $\Pi$ when run on input $S$ terminates and returns $I_2$, in which case it is a positive instance of \textbf{CORRECTNESS}.
+
+We know that \textbf{HALTING} is semi-decidable. Then by definition of the reduction, \textbf{CORRECTNESS} is semi-decidable.
+
+\begin{exercise}
+    Prove that the following problem is undecidable:
+
+  \begin{center}
+    \fbox{
+      \begin{minipage}[c]{.9\linewidth}
+        \textbf{ALL-FALSE}
+
+\medskip INSTANCE: A program $\Pi$ that takes as input a natural number and
+returns \emph{true} or \emph{false}. It is guaranteed that $\Pi$ terminates on
+any input.
+ 
+
+\medskip
+
+QUESTION: Is it the case that  $\Pi(k)=false$ for \emph{all} natural numbers $k$?
+      \end{minipage}
+    }
+  \end{center}
+
+  Hint: For your proof you may assume the availability of an interpreter for
+  instances of \textbf{HALTING}. In particular, you have available a decision
+  procedure $\Pi_{int}$ that does the following:
+  \begin{enumerate}\item $\Pi_{int}$ takes as input a program $\Pi$,  a
+    string $I$, and a natural number $n$.
+
+  \item $\Pi_{int}$ emulates the first $n$ steps of the run of $\Pi$ on
+    $I$. If $\Pi$ terminates on $I$ within $n$ steps, then $\Pi_{int}$ returns
+    \emph{true}. Otherwise, $\Pi_{int}$ returns \emph{false}.
+  \end{enumerate}
+
+    
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:} your solution
+
+
+\medskip
+
+  Suppose you have $n$ processes, where some processes may need to
+  communicate with each other. Suppose you also have $m$ computers,
+  where some of them are connected by a (fast) direct network
+  connection. Each computer has a limit on the number of processes it
+  can run. Your problem is to assign processes to computers so that
+  the limits are obeyed and all the processes that need to communicate
+  can communicate. This can be formalized as follows:
+
+  \begin{center}
+    \fbox{
+      \begin{minipage}[c]{.9\linewidth}
+        \textbf{ASSIGNMENT}
+
+        \medskip INSTANCE: A pair $G_1=(V_1,E_1)$ and $G_2=(V_2,E_2)$
+        of undirected graphs, and a function $limit$ that assigns to
+        each $v\in V_2$ an integer. The graph $G_2$ is reflexive,
+        i.e. for every $v\in V_2$, $[v,v]\in E_2$.
+
+        \medskip
+
+        QUESTION: Does there exist an assignment $\mu$ that assigns to
+        each vertex in $V_1$ a vertex in $V_2$ such that:
+
+        \begin{enumerate}[(A)]
+        \item if $[v,v']\in E_1$, then also $[\mu(v),\mu(v')]\in E_2$, and
+        \item for every vertex $v$ in $V_2$, no more than $limit(v)$
+          nodes of $V_1$ are assigned to $v$.
+        \end{enumerate}
+
+      \end{minipage}
+    }
+  \end{center}
+
+
+
+
+
+\begin{exercise}
+    Give a proof that \textbf{ASSIGNMENT} is in $\NP$, i.e.\,define a
+    certificate relation and briefly discuss that it is polynomially
+    balanced and polynomial-time decidable.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:}
+We define a certificate relation for \textbf{ASSIGNMENT} as follows:\\
+\begin{align}
+ R &= \{ ((G_1, G_2, limit), \mu) | \mu \text{ is a correct assignment that satisfies the conditions A and B} \}
+\end{align}
+
+R is a certificate relation for \textbf{ASSIGNMENT}, because an instance $(G_1, G_2, limit)$ is a positive instance of \textbf{ASSIGNMENT} $\Leftrightarrow$ there exists an assignment $\mu$, such that the conditions A and B of \textbf{ASSIGNMENT} are satisfied  $ \Leftrightarrow ((G_1, G_2, limit), \mu) \in R$.\\
+
+R is polynomially balanced, because we only require space that is linear in the size of $V_1$.
+
+R is polynomially time-decidable, because we can check condition A in polynmial time in the size of $E_1$ and $E_2$ and condition B in polynomial time in the size of $(V_2)$ satisfies the conditions A and B.
+
+
+\begin{exercise}
+    Define a polynomial-time reduction from \textbf{CLIQUE} to
+    \textbf{ASSIGNMENT}.
+\end{exercise}
+Note: the result of Exercise 5 together with the reduction show that
+\textbf{ASSIGNMENT} is $\NP$-complete.
+
+\medskip
+
+\textbf{Solution:} your solution
+
+\medskip
+    We consider a polynomial-time reduction from \textbf{INDEPENDENT SET} to
+    \textbf{SAT}.  Let an arbitrary instance of \textbf{INDEPENDENT SET} be
+    given by the undirected graph $G=(V,E)$ and integer $k$. Let $V$ be of the
+    form $V=\{b_1,\ldots,b_m\}$.  We construct a propositional formula
+    $\phi_{G,k}$ (i.e. an instance of \textbf{SAT}) as follows.
+First of all, we use the following propositional variables:
+\begin{enumerate}[-]
+\item $M_{i,b_j}$ for each $1 \leq i \leq k$ and $ 1 \leq j \leq m$
+(intended meaning: $M_{i,b_j}$ is set to $\true$ in a model of $\phi_{G,k}$ if and only if the number $i$ is
+    assigned to the node $b_j$ of $G$).
+  \end{enumerate} 
+
+ Then the formula $\phi_{G,k}$ is defined as $\phi_{G,k}=
+  \alpha_1\land \alpha_2 \land \alpha_3 $, where
+
+\[\alpha_1=\bigwedge_{1 \leq i \leq k} \big ( \bigvee_{1 \leq j \leq m}
+    M_{i,b_j} \big )\]
+
+    \[\alpha_2=\bigwedge
+    \limits_{ (1 \leq n \leq m) \wedge (1 \leq i,j \leq k)\wedge (i\neq j) }
+    \neg (M_{i,b_n} \land M_{j,b_n})\]
+
+  \[\alpha_3=\bigwedge_{[v_1,v_2] \in E } \bigwedge_{ 1 \leq i,j \leq k } \neg(
+  M_{i,v_1}\land M_{j,v_2} ) \]
+
+{\em Informal explanation of the reduction.}
+Intuitively (!), the formulae $\alpha_1,\alpha_2,\alpha_3$
+can be explained as follows. 
+%
+\begin{itemize}
+% \item The formula $\alpha_1$ simply ``encodes'' the edges of $G$ as
+%     a logical formula.
+\item The formula $\alpha_1$ expresses the condition that each number $i\in
+  \{1,\ldots k,\}$ must be assigned to at least one node from $G$.
+\item The formula $\alpha_2$ makes sure that a pair of numbers do not share
+  the same vertex in $G$. Thus $\alpha_1$ together with $\alpha_2$ make sure
+  that at least $k$ nodes from $G$ have numbers ``assigned''.
+
+\item The formula $\alpha_3$ ensures that for every edge $[v_1,v_2]$ of $G$ we
+  have not assigned numbers to both $v_1$ and $v_2$.
+\end{itemize}
+
+\noindent {\em Remark.} All the above comments are {\em explanations\/} of the
+intuition of the problem reduction. They are {\em not proofs\/}!! When you are
+requested to prove the correctness of the problem reduction, you are not
+allowed to refer to these explanations. {\em Your proofs have to be
+  self-contained\/}!
+
+\begin{exercise}
+  Prove formally the ``$\Rightarrow$'' direction of the correctness of
+  the reduction, i.e.  prove the following statement: if $G$ has an
+  independent set $I$ of size $\geq k$, then there exists a truth
+  assignment $T$ that makes $\phi_{G,k}$ evaluate to $\true$.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:} Let (G, k) be a positive instance of \textbf{INDEPENDENT-SET}, that means there exists an $I \subset G$ with $|I| \geq k$, which satisfies the conditions of \textbf{INDEPENDENT-SET}. Without loss of generality, we assume $I$ is of the form $I=\{b_1, ..., b_k\}$.
+For every $i \in K$ where $K$ is of the form $K=\{1, ..., k\}$ we set $M_{i,b_j} \in T$ to true, if $b_j$ is the i'th node in I, that is $j=i$.\\
+
+Because I is of size greater or equal to k, it follows that for every i, there is must be an $M_{i,b_j}$ which is true. Therefore $\alpha_1$ must be true.
+
+Assume $\alpha_2$ is false. Then there must be two arbitrary variables $M_{i_1, b_j}, M_{i_2, b_j}$ of $T$ with $i_1 \neq i_2$ which are both true. Then it follows that $b_j = i_1$ and $b_j = i_2$ which means $i_1 = i_2$, but this is a contradiction to the definition of $\alpha_2$. Thus $\alpha_2$ must be true under the above assignment.
+
+Assume $\alpha_3$ is false under the above assignment. Then we can find two $M_{i,b_j}$ which are both true. Then there exist two nodes $v_1, v_2 \in V$ such that $[v_1, v_2] \in E$ and $v_1, v_2 \in I$. This is a contradiction. But then $\alpha_3$ must be true under the above assignment.
+
+We have shown that all three subformulas evaluate to true under the above assignment. then it follows that $\phi_{G, k}$ evaluates to true.
+
+\begin{exercise}
+  Prove the ``$\Leftarrow$'' direction of the correctness of the
+  reduction, i.e.  prove the following statement: if $\phi_{G,k}$ is
+  satisfiable, then there exists some independent set $I$ in $G$ of
+  size $\geq k$.
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:} Your Solution.
+
+\begin{exercise}
+    Argue that the following problem is solvable in logarithmic space:
+
+  \begin{center}
+    \fbox{
+      \begin{minipage}[c]{.9\linewidth}
+        \textbf{SAME-DIGITS}
+
+        \medskip INSTANCE: A pair $L_1,L_2$ of lists, where each list
+        contains some digits from $0,\ldots,9$.
+ 
+
+\medskip
+
+QUESTION: Is the set of digits occurring in $L_1$ equal to the set of digits
+occurring in $L_2$?
+      \end{minipage}
+    }
+  \end{center}
+    
+
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:} your solution
+
+\begin{exercise}
+    Let $L=\{w\in \{1\}^{*}\mid w \mbox{ has length }3k \mbox{ for some
+      integer }k\geq 0\}$, i.e. $L$ is the set of all strings $w$ such that (a) $w$
+    is built using the symbol $1$, and (b) the length of $w$ is a multiple of
+    $3$. Define a Turing machine $M$ that decides $L$, i.e. define a tuple $M=
+    (K,\Sigma, \delta, s)$ such that, for all $w\in \{1\}^{*}$, we have:
+  \begin{itemize}
+  \item if $w\in L$, then $M(w)="yes"$;
+  \item if $w\not \in L$, then $M(w)="no"$.
+  \end{itemize}
+ Additionally, provide a high-level description of $M$.    
+\end{exercise}
+
+\medskip
+
+\textbf{Solution:} your solution
+
+
+
+\end{document}
+
+
