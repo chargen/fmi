@@ -28,7 +28,7 @@ positioning,fit,calc,decorations.text,shadows%
 %%%
 % put your Matrikelnummer here instead of the XXXXXXXX
 %%%
-\newcommand\matrikelnummer[0]{XXXXXXXX}
+\newcommand\matrikelnummer[0]{1127054}
 %%%
 % put your Matrikelnummer here instead of the XXXXXXXX
 %%%
@@ -126,11 +126,47 @@ graph is a visualization of one model of the formula.
   \end{tikzpicture}
   \item Visualize a relation, which violates $T_1$.
   \end{enumerate}
-
 \solution{
-
+    \begin{enumerate}
+     \item U=$\{u,v,w,s,t\}$ Pred=$\{R/2\}$, Func=$\{\}$, Var=$\{\}$, $\alpha=\{\}$\\
+           $I(R)= \{(u,u), (v,v), (w,w), (s,s), (t,t), (u,t), (t,u) \}$
+	    \begin{figure}[h!]
+		\centering
+		\begin{tikzpicture}
+		    \foreach \name/\angle in {u/234, v/162, w/90, s/18, t/-54}
+		    \node[v,label={[label distance=4mm]\angle:\name}] (\name) at (\angle:2cm) {}
+			edge [thick,loop, looseness=10, out=\angle+45, in=\angle+-45] (\name);
+		    \draw [thick,bend left] (v) to (t);
+		    \draw [thick,bend left] (t) to (v);
+		\end{tikzpicture}
+	    \end{figure}
+    \item U=$\{u,v,w,t\}$
+	\begin{figure}[ht]
+	    \centering
+	    \begin{tikzpicture}[v/.append style={node distance=3cm}]
+		\node[v,label=above left:$u$] (u){};
+		\node[v,right of=u,label=below right:$v$] (v){};
+		\node[v,above of=v,label=above left:$w$] (w){};
+		\node[v,right=of w,label=above right:$t$] (t){};
+		\draw[line width=1.6pt,->,bend right=15] (u) to (v);
+		\draw[line width=1.6pt,->,bend right=15] (v) to (w);
+		\draw[line width=1.6pt,->,bend right=15] (w) to (u);
+		\draw[line width=1.6pt,->,bend right=15] (w) to (t);
+		\draw[line width=1.6pt,->,bend right=15] (v) to (u);
+		\draw[line width=1.6pt,->,bend right=15] (w) to (v);
+		\draw[line width=1.6pt,->,bend right=15] (u) to (w);
+		\draw[line width=1.6pt,->,bend right=15] (t) to (w);
+	    \end{tikzpicture}
+	\end{figure}
+    \end{enumerate}
+    \item U=$\{u\}$ I(R)=$\{\}$
+	\begin{figure}[ht]
+	    \centering
+	    \begin{tikzpicture}
+		\node [v,label=below:$u$] (u) {};
+	    \end{tikzpicture}
+	\end{figure}
 }
-
 \item Visualize the theory $T_2$, which consists of the formula:
   \begin{align*}
     \forall x \exists y: x R y
@@ -154,11 +190,37 @@ graph is a visualization of one model of the formula.
   \end{enumerate}
 
 \solution{
+    \begin{enumerate}
+    \item We choose 5 nodes and add edges to each node has an outgoing edge, so we connect the edges such that their path forms a simple cycle:
 
+	    \begin{figure}[h!]
+		\centering
+		\begin{tikzpicture}
+		    \foreach \name/\angle in {u/234, v/162, w/90, s/18, t/-54}
+			\node[v,label=\angle:\name] (\name) at (\angle:2cm) {};
+		    \foreach \prev/\next in {u/v, v/w, w/s, s/t, t/u}
+			\draw [thick] (\prev) to (\next);
+		\end{tikzpicture}
+	    \end{figure}
+     \item We need to add outgoing edges to v and r. The relation just states that there needs to exist a node y, but it does not matter where the edge points to.
+	    One possible solution is to add edges from v to u and r to t:
+
+	\begin{tikzpicture}
+	\node[v,label=above left:$u$] (u){};
+	\node[v,right of=u,label=above left:$v$] (v){};
+	\node[v,right of=v,label=above left:$w$] (w){};
+	\node[v,right of=w,label=above right:$t$] (t){};
+	\node[v,right of=t,label=above right:$r$] (r){};
+	\draw[thick] (u) -- (v);
+	\draw[thick] (v) -- (w);
+	\draw[thick] (t) -- (w);
+	\draw[dashed,thick,bend left] (w) to (u);
+	\draw[dashed,thick] (r) to (t);
+    \end{tikzpicture}
+    \end{enumerate}
 }
 
 \end{enumerate}
-
 
 \Aufgabe[Tseitin Transformation]
 
@@ -167,8 +229,33 @@ graph is a visualization of one model of the formula.
   use Tseitin to compute a sat-equivalent CNF.
 
 \solution{
+The Tseitin Transformation views the formula as a tree of sub formula occurences (SFOs). We first draw this tree and add labels to each node in this tree:
 
-}
+    \begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}
+	    \node [label=right:$\ell_6$] {$\rightarrow$}
+		child {node [label=right:$\ell_5$] {a}}
+		child {node [label=right:$\ell_4$] {$\rightarrow$}
+		    child {node [label=right:$\ell_3$] {b}}
+		    child {node [label=right:$\ell_2$] {$\neg$}
+			child {node [label=right:$\ell_1$]{a}}
+		    }
+		};
+	\end{tikzpicture}
+    \end{figure}
+
+\begin{tabular}{p{3cm}|p{3.5cm} p{3.5cm} p{3.5cm}} %pipes are horizontal lines, l means left aligned
+
+Equivalences& \multicolumn{3}{c}{Associated Clauses}\\
+for SFO in $\varphi$ & $C_1(\varphi)$ & $C_2(\varphi)$ & $C_3(\varphi)$\\
+\hline
+  $\ell \land a$ & $\ell \land b$ & $\ell \land c $ & $\ell \land d$\\
+\end{tabular}
+
+
+
+} %END: solution
 
 \item Given the circuit below with AND, NAND, and OR gates, use Tseitin to
   obtain a linear-size CNF.
