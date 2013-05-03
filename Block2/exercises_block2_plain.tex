@@ -13,6 +13,7 @@
 \usepackage[nounderscore]{syntax}
 \usepackage{paralist}
 \usepackage{enumitem}
+\usepackage[top=2cm,bottom=2cm]{geometry}
 \newcommand{\comment}[1]{\marginpar{\small{\bf Comment:} #1}}
 
 \usepackage{tikz}
@@ -35,6 +36,9 @@ positioning,fit,calc,decorations.text,shadows%
 \newcommand{\nop}[1]{}
 
 \def\cT{\mathcal{T}}
+
+\tikzstyle{v}=[circle,draw,fill,inner sep=3,node distance=1.5cm]
+\tikzstyle{thick}=[line width=1.6pt,->]
 
 
 \begin{document}
@@ -81,7 +85,7 @@ $\forall x \forall y \forall z : x R y \land y R z \rightarrow x R z$. So the
 graph is a visualization of one model of the formula.
 \begin{figure}[ht]
   \centering
-  \begin{tikzpicture}[v/.style={circle,draw,fill,inner sep=1}]
+  \begin{tikzpicture}
     \node[v,label=above left:$u$] (u){};
     \node[v,right of=u,label=above left:$v$] (v){};
     \node[v,right of=v,label=below right:$w$] (w){};
@@ -110,8 +114,7 @@ graph is a visualization of one model of the formula.
     your chosen domain, and visualize $R$.
   \item Consider the following graph, and extend it such that it corresponds
     to a model of $T_1$.
-
-  \begin{tikzpicture}[v/.style={circle,draw,fill,inner sep=1}]
+  \begin{tikzpicture}
     \node[v,label=above left:$u$] (u){};
     \node[v,right of=u,label=below right:$v$] (v){};
     \node[v,above of=v,label=above left:$w$] (w){};
@@ -138,7 +141,7 @@ graph is a visualization of one model of the formula.
   \item Consider the following graph, and extend it such that it corresponds
     to a model of $T_2$.
 
-  \begin{tikzpicture}[v/.style={circle,draw,fill,inner sep=1}]
+  \begin{tikzpicture}
     \node[v,label=above left:$u$] (u){};
     \node[v,right of=u,label=above left:$v$] (v){};
     \node[v,right of=v,label=above left:$w$] (w){};
