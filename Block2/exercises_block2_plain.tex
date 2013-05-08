@@ -39,7 +39,7 @@ positioning,fit,calc,decorations.text,shadows%
 
 \tikzstyle{v}=[circle,draw,fill,inner sep=3,node distance=1.5cm]
 \tikzstyle{thick}=[line width=1.6pt,->]
-
+\tikzstyle{arrow}=[line width=1.2pt,->]
 
 \begin{document}
 \newcommand{\Vorlesung}{Formal Methods in Computer Science}
@@ -90,11 +90,11 @@ graph is a visualization of one model of the formula.
     \node[v,right of=u,label=above left:$v$] (v){};
     \node[v,right of=v,label=below right:$w$] (w){};
     \node[v,above=of w,label=above right:$t$] (t){};
-    \draw[line width=1.6pt,->] (u) -- (v);
-    \draw[line width=1.6pt,->] (v) -- (w);
-    \draw[line width=1.6pt,->] (u) edge [bend right] (w);
-    \draw[line width=1.6pt,->] (v) -- (t);
-    \draw[line width=1.6pt,->] (u) edge[bend left] (t);
+    \draw[thick] (u) -- (v);
+    \draw[thick] (v) -- (w);
+    \draw[thick] (u) edge [bend right] (w);
+    \draw[thick] (v) -- (t);
+    \draw[thick] (u) edge[bend left] (t);
   \end{tikzpicture}
   \caption{A graph visualizing the transitive relation $R= \{ (u,v), (v,w),
     (u,w), (v,t), (u,t) \}$. The corresponding interpretation (with universe
@@ -119,10 +119,10 @@ graph is a visualization of one model of the formula.
     \node[v,right of=u,label=below right:$v$] (v){};
     \node[v,above of=v,label=above left:$w$] (w){};
     \node[v,right=of w,label=above right:$t$] (t){};
-    \draw[line width=1.6pt,->] (u) -- (v);
-    \draw[line width=1.6pt,->] (v) -- (w);
-    \draw[line width=1.6pt,->] (w) -- (u);
-    \draw[line width=1.6pt,->] (w) -- (t);
+    \draw[thick] (u) -- (v);
+    \draw[thick] (v) -- (w);
+    \draw[thick] (w) -- (u);
+    \draw[thick] (w) -- (t);
   \end{tikzpicture}
   \item Visualize a relation, which violates $T_1$.
   \end{enumerate}
@@ -143,19 +143,24 @@ graph is a visualization of one model of the formula.
     \item U=$\{u,v,w,t\}$
 	\begin{figure}[ht]
 	    \centering
-	    \begin{tikzpicture}[v/.append style={node distance=3cm}]
+	    \begin{tikzpicture}[v/.append style={node distance=3cm,fill=none,inner sep=2mm}]
 		\node[v,label=above left:$u$] (u){};
-		\node[v,right of=u,label=below right:$v$] (v){};
-		\node[v,above of=v,label=above left:$w$] (w){};
+		\node[v,right of=u,label=right:$v$] (v){};
+		\node[v,above of=v,label={[label distance=4mm]above left:$w$}] (w){};
 		\node[v,right=of w,label=above right:$t$] (t){};
-		\draw[line width=1.6pt,->,bend right=15] (u) to (v);
-		\draw[line width=1.6pt,->,bend right=15] (v) to (w);
-		\draw[line width=1.6pt,->,bend right=15] (w) to (u);
-		\draw[line width=1.6pt,->,bend right=15] (w) to (t);
-		\draw[line width=1.6pt,->,bend right=15] (v) to (u);
-		\draw[line width=1.6pt,->,bend right=15] (w) to (v);
-		\draw[line width=1.6pt,->,bend right=15] (u) to (w);
-		\draw[line width=1.6pt,->,bend right=15] (t) to (w);
+		\draw[arrow,bend right=10] (u) to (v);
+		\draw[arrow,bend right=10] (v) to (w);
+		\draw[arrow,bend right=10] (w) to (u);
+		\draw[arrow,bend right=10] (w) to (t);
+		\draw[arrow,bend right=10] (v) to (u);
+		\draw[arrow,bend right=10] (w) to (v);
+		\draw[arrow,bend right=10] (u) to (w);
+		\draw[arrow,bend right=10] (t) to (w);
+
+		\draw[arrow,loop, in=305, out=225, looseness=5] (u) to (u);
+		\draw[arrow,loop, in=305, out=225, looseness=5] (v) to (v);
+		\draw[arrow,loop, in=135, out=45, looseness=5] (w) to (w);
+		\draw[arrow,loop, in=305, out=225, looseness=5] (t) to (t);
 	    \end{tikzpicture}
 	\end{figure}
     \end{enumerate}
@@ -183,9 +188,9 @@ graph is a visualization of one model of the formula.
     \node[v,right of=v,label=above left:$w$] (w){};
     \node[v,right of=w,label=above right:$t$] (t){};
     \node[v,right of=t,label=above right:$r$] (r){};
-    \draw[line width=1.6pt,->] (u) -- (v);
-    \draw[line width=1.6pt,->] (v) -- (w);
-    \draw[line width=1.6pt,->] (t) -- (w);
+    \draw[thick] (u) -- (v);
+    \draw[thick] (v) -- (w);
+    \draw[thick] (t) -- (w);
   \end{tikzpicture}
   \end{enumerate}
 
@@ -418,6 +423,25 @@ $$\forall x\, [\neg \textit{atom}(x) \impl
 \end{itemize}
 
 \solution{
+We do the prove by contradiction. Assume there exists a T-interpretation $I$ such that $I \not \models \varphi$.
+\\
+
+\begin{tabular}{r|l|l}
+    1.&$ I \not \models \varphi $ & assumption\\
+    2.&$ I \models [\neg atom(\ell_1) \land \neg atom(\ell_2)\ \land $ & \\
+    & \qquad $ car(\ell_1) \doteq car(\ell_2) \land cdr(\ell_1) \doteq cdr(\ell_2)] $ & 1.,  semantics of $\rightarrow$\\
+    3.&$ I \not \models \ell_1 \doteq \ell_2 $ & 1., semantics of $\rightarrow$ \\
+    4.&$ I \models \neg atom(\ell_1) $ & 2., semantics of $\land$ \\
+    5.&$ I \models \neg atom(\ell_2) $ & 2., semantics of $\land$ \\
+    6.&$ I \models car(\ell_1) \doteq car(\ell_2) $ & 2., semantics of $\land$ \\
+    7.&$ I \models cdr(\ell_1) \doteq cdr(\ell_2( $ & 2., semantics of $\land$ \\
+    8.&$ I \models cons(car(\ell_1), cdr(\ell_1)) \doteq \ell_1 $ & 4,, construction \\
+    9.&$ I \models cons(car(\ell_2), cdr(\ell_2)) \doteq \ell_2 $ & 5., construction \\
+    10.&$ I \models \ell_1 \doteq \ell_2 $ & 8., 9., 10., symmetry, transitivity \\
+    11.&$ I \models \bot $ & 11., 3. \\
+\end{tabular}\\
+
+As we have choosen an arbitrary T-interpretation and the above proof leads to a contradiction, it follows, that $T_{cons}^E \models \varphi$ is valid.
 }
 
 
